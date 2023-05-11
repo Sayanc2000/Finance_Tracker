@@ -14,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
     restart: on-failure
     depends_on:
       - db
