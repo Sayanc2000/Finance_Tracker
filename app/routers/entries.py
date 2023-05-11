@@ -16,14 +16,14 @@ from app.utils.validators import entry_exists
 router = APIRouter(prefix="/entries", tags=["entries"])
 
 
-@router.get("", response_model=List[EntryDisplay])
+@router.get("", response_model=List[EntryDisplay], response_model_exclude_none=True)
 def get_entries(current_user: UserDisplay = Depends(get_current_active_user), db: Session = Depends(get_db)):
     entries = db.query(Entry).where(Entry.creator_id == current_user.id).order_by(
         desc(Entry.timestamp)).all()
     return entries
 
 
-@router.post("")
+@router.post("", response_model=EntryDisplay, response_model_exclude_none=True)
 def make_entry(data: EntryInput, current_user: UserDisplay = Depends(get_current_active_user),
                db: Session = Depends(get_db)):
     entry = Entry(**data.dict(), id=str(uuid.uuid4()), timestamp=current_utc_time(), creator_id=current_user.id)
@@ -37,7 +37,7 @@ def make_entry(data: EntryInput, current_user: UserDisplay = Depends(get_current
     return entry
 
 
-@router.patch("/{entry_id}", response_model=EntryDisplay)
+@router.patch("/{entry_id}", response_model=EntryDisplay, response_model_exclude_none=True)
 def edit_entry(entry_id: str, data: EntryInputPatch, entry: Entry = Depends(entry_exists),
                db: Session = Depends(get_db), current_user: UserDisplay = Depends(get_current_active_user)):
     excluded_dict = data.dict(exclude_none=True)

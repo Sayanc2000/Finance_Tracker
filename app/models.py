@@ -22,10 +22,16 @@ class EntryKind(enum.Enum):
     Income = "INCOME"
 
 
+class ExpenseKind(enum.Enum):
+    Need = "NEED"
+    Want = "WANT"
+
+
 class Entry(Base):
     __tablename__ = "entries"
     id = Column(String, primary_key=True, index=True)
     kind = Column(Enum(EntryKind))
+    expenseKind = Column(Enum(ExpenseKind))
     amount = Column(Float)
     timestamp = Column(String)
 
