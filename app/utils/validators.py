@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import Entry, User
 
 
-async def user_exists(request: Request, db: Session = Depends(get_db)):
+async def user_exists(request: Request, db: Session = Depends(get_db)) -> None:
     data = await request.json()
     email = data["email"]
     user = db.query(User).where(User.email == email).first()
@@ -13,7 +13,7 @@ async def user_exists(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists with this email")
 
 
-def entry_exists(request: Request, db: Session = Depends(get_db)):
+def entry_exists(request: Request, db: Session = Depends(get_db)) -> Entry or None:
     entry_id = None
     for key, val in request.path_params.items():
         if key == "entry_id":
@@ -23,4 +23,17 @@ def entry_exists(request: Request, db: Session = Depends(get_db)):
     entry = db.query(Entry).where(Entry.id == entry_id).first()
     if not entry:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This entry does not exist")
+    return entry
+
+
+def entry_exists_delete(request: Request, db: Session = Depends(get_db)) -> Entry or None:
+    entry_id = None
+    for key, val in request.path_params.items():
+        if key == "entry_id":
+            entry_id = val
+    if not entry_id:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="entry_id not found")
+    entry = db.query(Entry).where(Entry.id == entry_id).first()
+    if not entry:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="This entry does not exist")
     return entry
