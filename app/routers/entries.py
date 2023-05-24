@@ -2,6 +2,7 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, UploadFile, File, status
+from fastapi_cache.decorator import cache
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from starlette.responses import Response
@@ -19,6 +20,7 @@ router = APIRouter(prefix="/entries", tags=["entries"])
 
 
 @router.get("", response_model=List[EntryDisplay], response_model_exclude_none=True)
+@cache(expire=60)
 def get_entries(current_user: UserDisplay = Depends(get_current_active_user), db: Session = Depends(get_db)):
     entries = db.query(Entry).where(Entry.creator_id == current_user.id).order_by(
         desc(Entry.timestamp)).all()

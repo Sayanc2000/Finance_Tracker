@@ -19,6 +19,8 @@ alembic = "^1.10.4"
 hypercorn = "^0.14.3"
 pandas = "^2.0.1"
 httpx = "^0.24.0"
+fastapi-cache2 = "^0.2.1"
+redis = "^4.5.5"
 
 
 [build-system]
