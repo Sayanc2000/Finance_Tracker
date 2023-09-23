@@ -3,7 +3,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.models import EntryKind, ExpenseKind
-from app.pydantic_models.user_schemas import UserDisplay
 
 
 class EntryInput(BaseModel):
@@ -16,7 +15,6 @@ class EntryDisplay(EntryInput):
     id: str
     timestamp: str
     expenseKind: Optional[ExpenseKind]
-    creator: UserDisplay
 
     class Config:
         orm_mode = True

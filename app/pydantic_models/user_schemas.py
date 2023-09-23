@@ -1,3 +1,5 @@
+from enum import Enum
+
 from pydantic import BaseModel
 
 
@@ -26,3 +28,8 @@ class UserDisplay(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class EntryType(str, Enum):
+    EXPENSE = 'expense'
+    INCOME = 'income'
